@@ -38,6 +38,14 @@ Update HARDWARE.md's "Setup steps remaining" checklist to reflect what's been co
 - Keystone pre-warp correction (only needed if physical testing shows visible skew).
 - A 2D map view on the phone while connected to the Pi (new idea, needs its own design pass).
 
+## Possible future work
+Animations from the parent app's `DynamicArrowWidget` that were left out of the HUD renderer for now (the stepped flow wave was kept):
+- **Pulse:** scale 0.9 ↔ 1.1, faster as the turn gets closer (2000 / 1000 / 400 ms for far / approaching / imminent).
+- **Direction-change pop:** scale 1.0 → 1.3 → 1.0 over 300 ms (ease-out, then elastic) when the direction changes.
+- **Colour cross-fade:** 400 ms ease-in-out blend between approach-stage colours.
+
+Scaling animations would mean re-rasterising (or caching several sizes of) the supersampled arrow, so check the cost on the Pi first.
+
 ---
 
 *Prepared by: Liew Sau Yang | Sunway University | Bachelor of Software Engineering (Hons)*
