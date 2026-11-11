@@ -101,6 +101,14 @@ LABEL_FONT_FRACTION = 0.1             # of the arrow box (18 px on a 180 px box)
 LABEL_GAP_FRACTION = 0.045            # gap between arrow box and label (8 / 180)
 TURN_NOW_DISTANCE_M = 50
 
+# --- Network listener ------------------------------------------------------
+# UDP address the phone sends JSON packets to ("0.0.0.0" = all interfaces).
+LISTEN_HOST = "0.0.0.0"
+LISTEN_PORT = 5005
+LISTEN_MAX_PACKET_BYTES = 4096
+# Blank the screen if no valid packet has arrived for this many seconds.
+STALE_TIMEOUT_S = 5.0
+
 # --- Dev controls ----------------------------------------------------------
 # Sample distance (metres) used for each approach stage when cycling with Up/Down.
 DEV_STAGE_DISTANCES_M = {
