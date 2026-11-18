@@ -71,13 +71,38 @@ def parse_packet(data, received_at):
     return NavState(direction, float(distance), street, stage, exit_number, received_at)
 
 
+class LatestState:
+    """Thread-safe holder for the most recent valid NavState.
+
+    Every transport (UDP here, BLE in ble_listener.py) hands raw packets to
+    submit(), so they all share one validation path. Pass the same instance to
+    several transports and latest() is whichever packet arrived last.
+    """
+
+    def __init__(self):
+        self._lock = threading.Lock()
+        self._latest = None
+
+    def submit(self, data):
+        """Validate one raw packet and keep it if valid. Returns the NavState or None."""
+        state = parse_packet(data, time.monotonic())
+        if state is not None:
+            with self._lock:
+                self._latest = state
+        return state
+
+    def latest(self):
+        """The most recent valid NavState, or None if nothing valid has arrived."""
+        with self._lock:
+            return self._latest
+
+
 class Listener:
     """Receives packets on a daemon thread; latest() is safe to call from any thread."""
 
-    def __init__(self, host=config.LISTEN_HOST, port=config.LISTEN_PORT):
+    def __init__(self, host=config.LISTEN_HOST, port=config.LISTEN_PORT, store=None):
         self._addr = (host, port)
-        self._lock = threading.Lock()
-        self._latest = None
+        self._store = store if store is not None else LatestState()
         self._stop = threading.Event()
         self._sock = None
         self._thread = None
@@ -102,8 +127,7 @@ class Listener:
 
     def latest(self):
         """The most recent valid NavState, or None if nothing valid has arrived."""
-        with self._lock:
-            return self._latest
+        return self._store.latest()
 
     def _run(self):
         while not self._stop.is_set():
@@ -115,7 +139,4 @@ class Listener:
                 # e.g. Windows reports ICMP port-unreachable as a recv error on UDP
                 # sockets, or the socket was closed by stop(). Keep going until stopped.
                 continue
-            state = parse_packet(data, time.monotonic())
-            if state is not None:
-                with self._lock:
-                    self._latest = state
+            self._store.submit(data)

@@ -109,6 +109,14 @@ LISTEN_MAX_PACKET_BYTES = 4096
 # Blank the screen if no valid packet has arrived for this many seconds.
 STALE_TIMEOUT_S = 5.0
 
+# --- Bluetooth LE listener -------------------------------------------------
+# GATT peripheral the phone can write the same JSON packets to (ble_listener.py).
+BLE_DEVICE_NAME = "ARoute-HUD"
+BLE_SERVICE_UUID = "7d6a0001-3b1e-4f5c-9a52-0a1c5e8b4d10"
+BLE_CHARACTERISTIC_UUID = "7d6a0002-3b1e-4f5c-9a52-0a1c5e8b4d10"
+# How long to wait for BlueZ to register the service and start advertising.
+BLE_START_TIMEOUT_S = 10.0
+
 # --- Dev controls ----------------------------------------------------------
 # Sample distance (metres) used for each approach stage when cycling with Up/Down.
 DEV_STAGE_DISTANCES_M = {

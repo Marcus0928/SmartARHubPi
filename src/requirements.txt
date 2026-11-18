@@ -1,1 +1,4 @@
 pygame
+# BLE transport (ble_listener.py). Uses BlueZ over D-Bus on Linux; optional
+# with --transport udp.
+bless

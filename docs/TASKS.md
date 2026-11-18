@@ -28,6 +28,13 @@ Write `listener.py`: a UDP listener on port 5005 that receives one JSON packet p
 
 Write `main.py` to start both modules together. The renderer should read live state from the listener instead of hardcoded test values, and the screen should be plain black (FR-12) until data arrives or after 5 seconds without data.
 
+### Task 6a — Bluetooth LE transport
+**Status: written and tested on the PC against a stubbed `bless`; not yet run against real BlueZ on the Pi.** Implemented in `src/ble_listener.py`; `main.py --transport udp|ble|both` (default `both`).
+
+Add a BLE transport alongside the UDP listener: using `bless` (BlueZ), advertise as `ARoute-HUD` with service `7d6a0001-3b1e-4f5c-9a52-0a1c5e8b4d10` and one characteristic `7d6a0002-3b1e-4f5c-9a52-0a1c5e8b4d10` (write and write-without-response). Each write is one UTF-8 JSON packet in the UDP format, validated and stored by the same code as `listener.py` (`parse_packet()` / `LatestState`). The 5-second no-data black screen applies to both transports; the renderer is unchanged.
+
+To verify on the Pi: complete HARDWARE.md section 6 (install and BlueZ settings), then run the nRF Connect test in section 7, including write-without-response after an MTU request and the 5-second blank-out.
+
 ### Task 7 — Config centralization pass
 Review all files and confirm no tunable value (size, offset, colour, margin) is hardcoded outside `config.py`, per FR-11/NFR-03. Physical lens and combiner testing will need fast iteration on these values.
 
