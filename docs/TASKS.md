@@ -16,13 +16,17 @@ Write a minimal `renderer.py` that opens a full-screen black Pygame window and d
 Extend the renderer to support all 7 `TurnDirection` shapes (`forward`, `left`, `right`, `keepLeft`, `keepRight`, `uTurn`, `roundabout`), matching the shapes of the parent app's `DynamicArrowWidget` (chevrons for forward/left/right, smaller angled chevrons for keep-left/right, U-shaped arc for uTurn, 3/4-circle arc with exit number for roundabout). Add a simple way to cycle through them manually for testing (e.g. keyboard input) — a dev aid, to be removed or gated later.
 
 ### Task 4 — Distance text and approach-stage colour
-Add distance text display and colour switching by `approachStage` (far/green, approaching/amber, imminent/red), per REQUIREMENTS.md FR-07/FR-08.
+Add distance text display and colour switching by `stage` (far/green, approaching/amber, imminent/red), per REQUIREMENTS.md FR-07/FR-08.
 
 ### Task 5 — Listener module
-Write `listener.py`: a socket/WebSocket server that accepts a connection, parses incoming JSON matching the data contract in REQUIREMENTS.md, and exposes the latest valid state for the renderer to read. Handle disconnect/reconnect without crashing. Write a small standalone test script (or use `websocat`/`netcat`) to simulate the phone sending test payloads, so this can be verified without the Flutter app.
+**Status: done on the PC; not yet verified on the Pi.** Implemented as a UDP listener on port 5005 (`src/listener.py`), with `src/send_test.py` to simulate the phone.
+
+Write `listener.py`: a UDP listener on port 5005 that receives one JSON packet per message, parses it against the data contract in REQUIREMENTS.md, ignores malformed packets, and exposes the latest valid state for the renderer to read. UDP is connectionless, so there is nothing to reconnect. Write `send_test.py` to simulate the phone sending test packets, so this can be verified without the Flutter app.
 
 ### Task 6 — Wire listener and renderer together
-Write `main.py` to start both modules together. The renderer should read live state from the listener instead of hardcoded test values, and show the idle placeholder (FR-12) when nothing has been received yet.
+**Status: done on the PC; not yet verified on the Pi.** `src/main.py` runs live mode by default (black screen until data arrives or after 5 s without data), `--demo` for the keyboard dev mode, and `--windowed`.
+
+Write `main.py` to start both modules together. The renderer should read live state from the listener instead of hardcoded test values, and the screen should be plain black (FR-12) until data arrives or after 5 seconds without data.
 
 ### Task 7 — Config centralization pass
 Review all files and confirm no tunable value (size, offset, colour, margin) is hardcoded outside `config.py`, per FR-11/NFR-03. Physical lens and combiner testing will need fast iteration on these values.

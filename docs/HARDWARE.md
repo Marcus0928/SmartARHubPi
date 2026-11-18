@@ -38,7 +38,7 @@
 
 ## 5. Setup steps remaining
 
-1. Confirm Pygame installed on the Pi (`python3 -m pygame --version`); install if missing (`pip3 install pygame`).
+1. Confirm Pygame installed on the Pi (`python3 -c "import pygame; print(pygame.version.ver)"`); install if missing (`pip3 install pygame`).
 2. Pre-configure the Pi's Wi-Fi with the phone's hotspot credentials while a monitor/keyboard is still attached.
 3. Build and test the close-focus lens stack at the real target distance.
 4. Choose and test combiner material/tint level.

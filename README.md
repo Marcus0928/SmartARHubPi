@@ -33,7 +33,7 @@ This repo contains only the **Raspberry Pi side** — the network listener and t
 ## Project structure
 
 ```
-smart-ar-hud-pi/
+SmartARHubPi/
 ├── README.md
 ├── docs/
 │   ├── REQUIREMENTS.md
@@ -45,6 +45,7 @@ smart-ar-hud-pi/
     ├── main.py              # entry point — starts listener + renderer
     ├── listener.py          # receives JSON from the phone over Wi-Fi
     ├── renderer.py          # draws arrow + distance via Pygame
+    ├── send_test.py         # simulates the phone: sends test UDP packets
     └── config.py            # all tunable constants (sizes, offsets, colours)
 ```
 
@@ -52,7 +53,10 @@ smart-ar-hud-pi/
 
 - Raspberry Pi 3B+ confirmed booting to Raspberry Pi OS desktop.
 - YG300 projector case removed; HDMI confirmed on main driver board; powers via USB-C.
-- No rendering or networking code written yet.
+- Renderer done: all 7 arrow shapes, distance label and approach-stage colours, with a `--demo` keyboard mode for previewing shapes.
+- Listener done: receives UDP JSON from the phone on port 5005; the screen goes black after 5 seconds without data.
+- `send_test.py` done: simulates the phone by sending test packets.
+- The above has been run on a PC only. **Next step:** test live data on the Pi through the projector.
 - No close-focus lens or combiner testing done yet.
 - No housing built yet.
 
